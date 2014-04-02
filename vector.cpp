@@ -6,18 +6,19 @@ using namespace std;
 class vector
 {
     int* arr;
+    int size;
     public:
     vector();
     vector(const vector&);
     vector&operator=(const vector&);
-    vector&operator[](const vector&);
+    int&operator[](const int);
     ~vector();
     void pushBack(int); //el value
     void popBack();
     void insertAt(int, int); //position
     void removeAt(int); //position
     bool elementExists(int); //element value
-    int size;
+    void getSize() const;
     void print() const;
 };
 
@@ -56,6 +57,12 @@ vector& vector::operator=(const vector& newVector)
     }
     return *this;
 }
+
+int& vector::operator [](const int index)
+{
+	return arr[index];
+}
+
 
 void vector::pushBack(int val)
 {
@@ -128,6 +135,23 @@ void vector::print() const
     }
 }
 
+bool vector::elementExists(int element)
+{
+	for(int i=0; i<size; i++)
+	{
+		if(arr[i] == element)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+void vector::getSize() const
+{
+	cout<<"Array size is "<<size<<endl;
+}
+
 vector::~vector()
 {
     delete[] arr;
@@ -138,9 +162,11 @@ int main()
     vector vect;
     vect.pushBack(2);
     vect.pushBack(3);
-   // vect.popBack();
+    vect.popBack();
     vect.insertAt(2,4);
     vect.removeAt(3);
     vect.print();
+    vect[0] = 4;
+    cout<<vect[1]<<endl;
     return 0;
 }
