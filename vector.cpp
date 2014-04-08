@@ -2,17 +2,20 @@
 #include <cassert>
 
 using namespace std;
-
-class vector
+template <typename T>
+class Vector
 {
-    int* arr;
+    T* arr;
+    int capacity;
     int size;
-    public:
-    vector();
-    vector(const vector&);
-    vector&operator=(const vector&);
+public:
+    Vector();
+    Vector(int);
+    Vector(const T*, int);
+    Vector(const Vector&);
+    Vector&operator=(const Vector&);
     int&operator[](const int);
-    ~vector();
+    ~Vector();
     void pushBack(int); //el value
     void popBack();
     void insertAt(int, int); //position
@@ -21,34 +24,47 @@ class vector
     void getSize() const;
     void print() const;
 };
-
-vector::vector()
+template <typename T>
+Vector<T>::Vector()
 {
     size = 1;
-    arr = new int[size];
+    capacity = 16;
+    arr = new T[capacity];
     arr[0] = 0;
 }
 
-vector::vector(const vector& newVector)
+template <typename T>
+Vector<T>::Vector(const Vector<T>& newVector)
 {
     size = newVector.size;
-    arr = new int[size];
+    capacity = newVector.capacity;
+    arr = new T[capacity];
     assert(arr != NULL);
     for(int i=0; i<size; ++i)
     {
         arr[i] = newVector.arr[i];
     }
 }
-vector& vector::operator=(const vector& newVector)
+
+template <typename T>
+Vector<T>::Vector(const T* arr, int cap)
+{
+
+}
+
+
+template <typename T>
+Vector<T>& Vector<T>::operator=(const Vector<T>& newVector)
 {
     if(this != &newVector)
     {
         size = newVector.size;
+        capacity = newVector.capacity;
         if(arr != NULL)
         {
             delete[] arr;
         }
-        arr = new int[size];
+        arr = new T[capacity];
         assert(arr != NULL);
         for(int i=0; i<size; ++i)
         {
@@ -57,16 +73,16 @@ vector& vector::operator=(const vector& newVector)
     }
     return *this;
 }
-
-int& vector::operator [](const int index)
+template <typename T>
+int& Vector<T>::operator [](const int index)
 {
 	return arr[index];
 }
 
-
-void vector::pushBack(int val)
+template <typename T>
+void Vector<T>::pushBack(int val)
 {
-    int* temp = new int[size+1];
+    T* temp = new T[size+1];
     for(int i=0; i<size; i++)
     {
         temp[i] = arr[i];
@@ -74,21 +90,21 @@ void vector::pushBack(int val)
     temp[size] = val;
     delete[] arr;
     size++;
-    arr = new int[size];
+    arr = new T[size];
     for(int i=0; i<size; i++)
     {
         arr[i] = temp[i];
     }
 }
-
-void vector::popBack()
+template <typename T>
+void Vector<T>::popBack()
 {
     size--;
 }
-
-void vector::insertAt(int index, int val)
+template <typename T>
+void Vector<T>::insertAt(int index, int val)
 {
-    int* temp = new int[size+1];
+    T* temp = new T[size+1];
     for(int i=0; i<index; i++)
     {
         temp[i] = arr[i];
@@ -100,16 +116,16 @@ void vector::insertAt(int index, int val)
     }
     size++;
     delete[] arr;
-    arr = new int[size];
+    arr = new T[size];
     for(int i=0; i<size; i++)
     {
         arr[i] = temp[i];
     }
 }
-
-void vector::removeAt(int index)
+template <typename T>
+void Vector<T>::removeAt(int index)
 {
-    int* temp = new int[size-1];
+    T* temp = new T[size-1];
     for(int i=0; i<index; i++)
     {
         temp[i] = arr[i];
@@ -120,22 +136,22 @@ void vector::removeAt(int index)
     }
     size--;
     delete[] arr;
-    arr = new int[size];
+    arr = new T[size];
     for(int i=0; i<size; i++)
     {
         arr[i] = temp[i];
     }
 }
-
-void vector::print() const
+template <typename T>
+void Vector<T>::print() const
 {
     for(int i=0; i<size; i++)
     {
         cout<<"Element "<<i<<": "<<arr[i]<<endl;
     }
 }
-
-bool vector::elementExists(int element)
+template <typename T>
+bool Vector<T>::elementExists(int element)
 {
 	for(int i=0; i<size; i++)
 	{
@@ -146,20 +162,20 @@ bool vector::elementExists(int element)
 	}
 	return false;
 }
-
-void vector::getSize() const
+template <typename T>
+void Vector<T>::getSize() const
 {
 	cout<<"Array size is "<<size<<endl;
 }
-
-vector::~vector()
+template <typename T>
+Vector<T>::~Vector()
 {
     delete[] arr;
 }
 
 int main()
 {
-    vector vect;
+    Vector<int> vect;
     vect.pushBack(2);
     vect.pushBack(3);
     vect.popBack();
