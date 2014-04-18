@@ -16,6 +16,8 @@ public:
 	Date(int, int, int);
 	Date(const Date&);
 	Date&operator=(const Date&);
+	bool operator<(const Date&);
+	bool operator>(const Date&);
 	void printDate() const;
 	bool validDate(int, int, int);
 };

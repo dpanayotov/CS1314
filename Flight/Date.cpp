@@ -41,6 +41,40 @@ Date& Date::operator=(const Date& other)
 	return *this;
 }
 
+bool Date::operator<(const Date& other)
+{
+	if(year<other.year)
+	{
+		return true;
+	}
+	else if(month<other.month)
+	{
+		return true;
+	}
+	else if(day<other.day)
+	{
+		return true;
+	}
+	return false;
+}
+
+bool Date::operator>(const Date& other)
+{
+	if(year>other.year)
+	{
+		return true;
+	}
+	else if(month>other.month)
+	{
+		return true;
+	}
+	else if(day>other.day)
+	{
+		return true;
+	}
+	return false;
+}
+
 bool Date::validDate(int newDay, int newMonth, int newYear)
 {
 	if(newDay>0 && newDay<=31 && newMonth <=12 && newMonth>0)//no check if year is leap or in which month we are

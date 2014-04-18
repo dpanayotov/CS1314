@@ -30,7 +30,7 @@ Airport::Airport(Flight* newFlights, int size)
 	for(int i=0; i<size; i++)
 	{
 		flights[i] = newFlights[i];
-		flights[i].id++;
+		flights[i].flightNumber++;
 	}
 }
 
@@ -42,7 +42,7 @@ Airport::Airport(const Airport& other)
 	for(int i=0; i<size; i++)
 	{
 		flights[i] = other.flights[i];
-		flights[i].id++;
+		flights[i].flightNumber++;
 	}
 }
 
@@ -57,7 +57,7 @@ Airport& Airport::operator =(const Airport& other)
 		for(int i=0; i<size; i++)
 		{
 			flights[i] = other.flights[i];
-			flights[i].id++;
+			flights[i].flightNumber++;
 		}
 	}
 	return *this;
@@ -77,7 +77,7 @@ void Airport::addFlight(Flight newFlight)
 		temp[i] = flights[i];
 	}
 	temp[size] = newFlight;
-	temp[size].id++;
+	temp[size].flightNumber++;
 	delete[] flights;
 	size++;
 	flights = new Flight[size];
@@ -92,24 +92,70 @@ void Airport::addFlight(Flight newFlight)
 void Airport::removeFlight(int mID)
 {
 	Flight* temp = new Flight[size-1];
+	int k=0;
 	for(int i=0; i<size; i++)
 	{
-		if(flights[i].id != mID)
+		if(flights[i].getID() != mID)
 		{
-			temp[i] = flights[i];
+			temp[k] = flights[i];
+			temp[k].setID(flights[i].getID()); //workaround because operator= increments id
+			k++;
 		}
 	}
-
 	delete[] flights;
 	size--;
 	flights = new Flight[size];
 	for(int i=0; i<size; i++)
 	{
 		flights[i] = temp[i];
+		flights[i].setID(temp[i].getID());
 	}
 	delete[] temp;
 }
 
+void Airport::flightsFrom(char* mFrom)
+{
+	cout<<"Flights from "<<mFrom<<':'<<endl;
+	for(int i=0; i<size; i++)
+	{
+		if(strcmp(flights[i].getFrom(), mFrom) == 0)
+		{
+			flights[i].printFlight();
+		}
+	}
+}
+
+void Airport::flightsTo(char* mTo)
+{
+	cout<<"\nFlights to "<<mTo<<':'<<endl;
+	for(int i=0; i<size; i++)
+	{
+		if(strcmp(flights[i].getTo(), mTo) == 0)
+		{
+			flights[i].printFlight();
+		}
+	}
+}
+
+void Airport::sort()
+{
+	Flight* temp = new Flight[size];
+	for(int i=0; i<size; i++)
+	{
+		for(int j=0; j<size; j++)
+		{
+			if(flights[i].getDeparture() < flights[j].getDeparture())
+			{
+				Flight swap = flights[i];
+				swap.setID(flights[i].getID());
+				flights[i] = flights[j];
+				flights[i].setID(flights[j].getID());
+				flights[j] = swap;
+				flights[j].setID(swap.getID());
+			}
+		}
+	}
+}
 
 void Airport::print() const
 {

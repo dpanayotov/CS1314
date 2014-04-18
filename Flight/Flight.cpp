@@ -8,7 +8,7 @@
 #include "Flight.h"
 using namespace std;
 
-int Flight::id=0;
+int Flight::flightNumber=0;
 Flight::Flight()
 {
 	departure = FlightTime();
@@ -19,7 +19,7 @@ Flight::Flight()
 	to = new char[1];
 	assert(to != NULL);
 	to = '\0';
-	id++;
+	id = ++flightNumber;
 }
 
 Flight::Flight(FlightTime newDeparture, FlightTime newArrival, char* newFrom, char* newTo)
@@ -30,7 +30,7 @@ Flight::Flight(FlightTime newDeparture, FlightTime newArrival, char* newFrom, ch
 	strcpy(from, newFrom);
 	to = new char[strlen(newTo) + 1];
 	strcpy(to, newTo);
-	id++;
+	id = ++flightNumber;
 }
 
 Flight::Flight(const Flight& other)
@@ -41,7 +41,7 @@ Flight::Flight(const Flight& other)
 	strcpy(from, other.from);
 	to = new char[strlen(other.to)+1];
 	strcpy(to, other.to);
-	id++;
+	id = ++flightNumber;
 }
 
 Flight& Flight::operator =(const Flight& other)
@@ -58,7 +58,7 @@ Flight& Flight::operator =(const Flight& other)
 		assert(to != NULL);
 		strcpy(from, other.from);
 		strcpy(to, other.to);
-		id++;
+		id = ++flightNumber;
 	}
 	return *this;
 }
@@ -80,5 +80,29 @@ void Flight::printFlight() const
 	cout<<"Arrival: ";
 	arrival.printFlightTime();
 	cout<<endl;
+}
 
+int Flight::getID() const
+{
+	return id;
+}
+
+char* Flight::getFrom() const
+{
+	return from;
+}
+
+char* Flight::getTo() const
+{
+	return to;
+}
+
+void Flight::setID(int mID)
+{
+	id = mID;
+}
+
+FlightTime Flight::getDeparture() const
+{
+	return departure;
 }

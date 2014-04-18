@@ -17,6 +17,8 @@ public:
 	Time(int, int, int);
 	Time(const Time&);
 	Time&operator=(const Time&);
+	bool operator<(const Time&);
+	bool operator>(const Time&);
 	void printTime() const;
 };
 

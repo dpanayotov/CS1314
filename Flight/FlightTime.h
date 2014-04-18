@@ -20,6 +20,8 @@ public:
 	FlightTime(Date, Time);
 	FlightTime(const FlightTime&);
 	FlightTime&operator=(const FlightTime&);
+	bool operator<(const FlightTime&);
+	bool operator>(const FlightTime&);
 	void printFlightTime() const;
 };
 

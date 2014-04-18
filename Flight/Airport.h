@@ -21,8 +21,8 @@ public:
 	~Airport();
 	void addFlight(Flight);
 	void removeFlight(int);
-	Flight* flightsFrom(char*);
-	Flight* flightsTo(char*);
+	void flightsFrom(char*);
+	void flightsTo(char*);
 	void sort();
 	void print() const;
 

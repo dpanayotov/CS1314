@@ -37,6 +37,32 @@ FlightTime& FlightTime::operator=(const FlightTime& other)
 	return *this;
 }
 
+bool FlightTime::operator<(const FlightTime& other)
+{
+	if(date<other.date)
+	{
+		return true;
+	}
+	else if(time < other.time)
+	{
+		return true;
+	}
+	return false;
+}
+
+bool FlightTime::operator>(const FlightTime& other)
+{
+	if(date>other.date)
+	{
+		return true;
+	}
+	else if(time > other.time)
+	{
+		return true;
+	}
+	return false;
+}
+
 void FlightTime::printFlightTime() const
 {
 	time.printTime();

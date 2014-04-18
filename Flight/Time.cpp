@@ -39,6 +39,40 @@ Time& Time::operator=(const Time& other)
 	return *this;
 }
 
+bool Time::operator<(const Time& other)
+{
+	if(hours<other.hours)
+	{
+		return true;
+	}
+	else if(minutes < other.minutes)
+	{
+		return true;
+	}
+	else if(seconds < other.seconds)
+	{
+		return true;
+	}
+	return false;
+}
+
+bool Time::operator>(const Time& other)
+{
+	if(hours>other.hours)
+	{
+		return true;
+	}
+	else if(minutes > other.minutes)
+	{
+		return true;
+	}
+	else if(seconds > other.seconds)
+	{
+		return true;
+	}
+	return false;
+}
+
 void Time::printTime() const
 {
 	cout<<hours<<':'<<minutes<<':'<<seconds<<' ';
