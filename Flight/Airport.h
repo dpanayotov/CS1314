@@ -8,23 +8,25 @@
 #ifndef AIRPORT_H_
 #define AIRPORT_H_
 #include "Flight.h"
+
 class Airport
 {
 	Flight* flights;
-	static int flightNumber;
+	int size;
 public:
 	Airport();
-	Airport(Flight*);
+	Airport(Flight*, int);
 	Airport(const Airport&);
 	Airport&operator=(const Airport&);
 	~Airport();
 	void addFlight(Flight);
-	void removeFlight(Flight);
+	void removeFlight(int);
 	Flight* flightsFrom(char*);
 	Flight* flightsTo(char*);
 	void sort();
 	void print() const;
 
 };
+
 
 #endif /* AIRPORT_H_ */

@@ -8,18 +8,21 @@
 #include "Flight.h"
 using namespace std;
 
+int Flight::id=0;
 Flight::Flight()
 {
 	departure = FlightTime();
 	arrival = FlightTime();
-	id = 0;
 	from = new char[1];
+	assert(from != NULL);
 	from = '\0';
 	to = new char[1];
+	assert(to != NULL);
 	to = '\0';
+	id++;
 }
 
-Flight::Flight(FlightTime newDeparture, FlightTime newArrival, char* newFrom, char* newTo, int newId)
+Flight::Flight(FlightTime newDeparture, FlightTime newArrival, char* newFrom, char* newTo)
 {
 	departure = newDeparture;
 	arrival = newArrival;
@@ -27,7 +30,7 @@ Flight::Flight(FlightTime newDeparture, FlightTime newArrival, char* newFrom, ch
 	strcpy(from, newFrom);
 	to = new char[strlen(newTo) + 1];
 	strcpy(to, newTo);
-	id = newId;
+	id++;
 }
 
 Flight::Flight(const Flight& other)
@@ -38,7 +41,7 @@ Flight::Flight(const Flight& other)
 	strcpy(from, other.from);
 	to = new char[strlen(other.to)+1];
 	strcpy(to, other.to);
-	id = other.id;
+	id++;
 }
 
 Flight& Flight::operator =(const Flight& other)
@@ -47,17 +50,23 @@ Flight& Flight::operator =(const Flight& other)
 	{
 		departure = other.departure;
 		arrival = other.arrival;
+		delete[] from;
+		delete[] to;
+		from = new char[strlen(other.from)+1];
+		assert(from != NULL);
+		to = new char[strlen(other.to)+1];
+		assert(to != NULL);
 		strcpy(from, other.from);
 		strcpy(to, other.to);
-		id = other.id;
+		id++;
 	}
 	return *this;
 }
 
 Flight::~Flight()
 {
-	delete from;
-	delete to;
+	delete[] from;
+	delete[] to;
 }
 
 void Flight::printFlight() const

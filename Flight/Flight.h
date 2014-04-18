@@ -9,15 +9,16 @@
 #define FLIGHT_H_
 #include "FlightTime.h"
 #include <cstring>
+#include <cassert>
 class Flight
 {
 	FlightTime departure, arrival;
-	int id;
 	char* from;
 	char* to;
 public:
+	static int id;
 	Flight();
-	Flight(FlightTime, FlightTime, char*, char*, int);
+	Flight(FlightTime, FlightTime, char*, char*);
 	Flight(const Flight&);
 	Flight&operator=(const Flight&);
 	~Flight();
