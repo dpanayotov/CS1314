@@ -1,23 +1,24 @@
 
 public class Group{
-	private Student[] group = new Student[30];
+	private Student[] group = new Student[10];
 	public Group(){
-		for(int i=0; i<group.length; i++){
-			group[i] = new Student();
+		for(Student s:group){
+			s = new Student();
 		}
 	}
 	
 	public Group(Student[] s){
 		for(int i=0; i<s.length; i++)
 		{
+			group[i] = new Student();
 			group[i] = s[i];
 		}
 	}
 	
 	public void getAverage(){
 		double average = 0;
-		for(int i=0; i<group.length; i++){
-			average += group[i].getGrade();
+		for(Student s:group){
+			average += s.getGrade();
 		}
 		System.out.printf("Group's average grade is %.2f", average);
 	}
@@ -76,7 +77,7 @@ public class Group{
 		}
 	}
 	
-	public final void print(){
+	public void print(){
 		for(Student s:group){
 			s.print();
 		}
