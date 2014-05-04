@@ -40,7 +40,8 @@ public class Student {
 		return grade;
 	}
 	
-	public final void print(){
+	public void print(){
 		System.out.printf("FN - %d, name - %s, grade - %.2f", facNum, name, grade);
+		System.out.println();
 	}
 }
