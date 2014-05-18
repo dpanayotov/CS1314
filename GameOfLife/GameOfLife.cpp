@@ -52,7 +52,7 @@ GameOfLife::GameOfLife(int _rows, int _cols, CELL_STATUS* coords) :
 		k += 2;
 	}
 
-	draw();
+	cout<<this;
 }
 
 GameOfLife::GameOfLife(const GameOfLife& other)
@@ -74,7 +74,7 @@ GameOfLife::GameOfLife(const GameOfLife& other)
 		}
 	}
 
-	draw();
+	cout<<this;
 }
 
 GameOfLife::~GameOfLife()
@@ -107,11 +107,11 @@ ostream& operator<<(ostream& out, const GameOfLife& other)
 	return out;
 }
 
-CELL_STATUS GameOfLife::getCell(int x, int y) const
+char* GameOfLife::getCell(int x, int y) const
 {
-	if (board[x][y] == 0)
+	if (board[x][y] == DEAD)
 	{
-		return DEAD;
+		return "DEAD";
 	}
-	return ALIVE;
+	return "ALIVE";
 }

@@ -26,7 +26,7 @@ public:
 	GameOfLife(const GameOfLife&);
 	~GameOfLife();
 	void advance();
-	CELL_STATUS getCell(int, int) const;
+	char* getCell(int, int) const;
 	friend std::ostream& operator<<(std::ostream&, const GameOfLife&);
 };
 
