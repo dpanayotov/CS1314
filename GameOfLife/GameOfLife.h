@@ -20,14 +20,13 @@ class GameOfLife
 	int rows;
 	int cols;
 	CELL_STATUS** board;
-	void draw(CELL_STATUS* _board[]);
 public:
 	GameOfLife();
 	GameOfLife(int, int, CELL_STATUS*);
 	GameOfLife(const GameOfLife&);
 	~GameOfLife();
 	void advance();
-	CELL_STATUS getCell() const;
+	CELL_STATUS getCell(int, int) const;
 	friend std::ostream& operator<<(std::ostream&, const GameOfLife&);
 };
 

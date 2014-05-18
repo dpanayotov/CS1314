@@ -10,13 +10,27 @@ using namespace std;
 
 GameOfLife::GameOfLife()
 {
-	cout<<"asd";
+	rows = 5;
+	cols = 10;
+	board = new CELL_STATUS*[rows];
+	for (int i = 0; i < rows; i++)
+	{
+		board[i] = new CELL_STATUS[cols];
+	}
+
+	for (int i = 0; i < rows; i++)
+	{
+		for (int j = 0; j < cols; j++)
+		{
+			board[i][j] = DEAD;
+		}
+	}
 }
 
 GameOfLife::GameOfLife(int _rows, int _cols, CELL_STATUS* coords) :
 		rows(_rows), cols(_cols)
 {
-	int k=0;
+	int k = 0;
 	board = new CELL_STATUS*[rows];
 
 	for (int i = 0; i < rows; i++)
@@ -32,13 +46,13 @@ GameOfLife::GameOfLife(int _rows, int _cols, CELL_STATUS* coords) :
 		}
 	}
 
-	while(coords[k])
+	while (coords[k])
 	{
-		board[coords[k]][coords[k+1]] = ALIVE;
-		k+=2;
+		board[coords[k]][coords[k + 1]] = ALIVE;
+		k += 2;
 	}
 
-	draw(board);
+	draw();
 }
 
 GameOfLife::GameOfLife(const GameOfLife& other)
@@ -60,7 +74,7 @@ GameOfLife::GameOfLife(const GameOfLife& other)
 		}
 	}
 
-	draw(board);
+	draw();
 }
 
 GameOfLife::~GameOfLife()
@@ -73,14 +87,31 @@ GameOfLife::~GameOfLife()
 	delete[] board;
 }
 
-void GameOfLife::draw(CELL_STATUS *_board[])
+ostream& operator<<(ostream& out, const GameOfLife& other)
 {
-	for (int i = 0; i < rows; i++)
+	for (int i = 0; i < other.rows; i++)
 	{
-		for (int j = 0; j < cols; j++)
+		for (int j = 0; j < other.cols; j++)
 		{
-			cout << board[i][j];
+			if (other.board[i][j] == DEAD)
+			{
+				out << '.';
+			}
+			else if (other.board[i][j] == ALIVE)
+			{
+				out << 'X';
+			}
 		}
-		cout << endl;
+		out << endl;
 	}
+	return out;
+}
+
+CELL_STATUS GameOfLife::getCell(int x, int y) const
+{
+	if (board[x][y] == 0)
+	{
+		return DEAD;
+	}
+	return ALIVE;
 }
