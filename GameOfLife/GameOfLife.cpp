@@ -8,10 +8,11 @@
 #include "GameOfLife.h"
 using namespace std;
 
-GameOfLife::GameOfLife()
+GameOfLife::GameOfLife() :
+		flag(true)
 {
-	rows = 5;
-	cols = 10;
+	rows = 4;
+	cols = 4;
 	board = new CELL_STATUS*[rows];
 	for (int i = 0; i < rows; i++)
 	{
@@ -26,13 +27,22 @@ GameOfLife::GameOfLife()
 		}
 	}
 
-	board[1][1] = ALIVE;
+	//create buffer board to check neighbor states
+	tempBoard = new CELL_STATUS*[rows];
+	for (int i = 0; i < rows; i++)
+	{
+		tempBoard[i] = new CELL_STATUS[cols];
+	}
+
+	board[0][1] = ALIVE;
 	board[1][2] = ALIVE;
-	board[1][3] = ALIVE;
+	board[2][0] = ALIVE;
+	board[2][1] = ALIVE;
+	board[2][2] = ALIVE;
 }
 
 GameOfLife::GameOfLife(int _rows, int _cols, int* coords) :
-		rows(_rows), cols(_cols)
+		rows(_rows), cols(_cols), flag(true)
 {
 	int k = 0;
 	board = new CELL_STATUS*[rows];
@@ -55,11 +65,18 @@ GameOfLife::GameOfLife(int _rows, int _cols, int* coords) :
 		board[coords[k]][coords[k + 1]] = ALIVE;
 		k += 2;
 	}
+	//create buffer board to check neighbor states
+	tempBoard = new CELL_STATUS*[rows];
+	for (int i = 0; i < rows; i++)
+	{
+		tempBoard[i] = new CELL_STATUS[cols];
+	}
 
 	cout << this;
 }
 
-GameOfLife::GameOfLife(const GameOfLife& other)
+GameOfLife::GameOfLife(const GameOfLife& other) :
+		flag(other.flag)
 {
 	rows = other.rows;
 	cols = other.cols;
@@ -78,6 +95,12 @@ GameOfLife::GameOfLife(const GameOfLife& other)
 		}
 	}
 
+	//create buffer board to check neighbor states
+	tempBoard = new CELL_STATUS*[rows];
+	for (int i = 0; i < rows; i++)
+	{
+		tempBoard[i] = new CELL_STATUS[cols];
+	}
 	cout << this;
 }
 
@@ -86,159 +109,127 @@ GameOfLife::~GameOfLife()
 	for (int i = 0; i < rows; ++i)
 	{
 		delete[] board[i];
+		delete[] tempBoard[i];
 	}
 
 	delete[] board;
+	delete[] tempBoard;
 }
 
 void GameOfLife::advance()
 {
-	int aliveCells = 0;
 
-	//create buffer board to check neighbor states
-	CELL_STATUS** tempBoard = new CELL_STATUS*[rows];
-	for (int i = 0; i < rows; i++)
+	if (flag)
 	{
-		tempBoard[i] = new CELL_STATUS[cols];
-	}
-
-	for (int i = 0; i < rows; i++)
-	{
-		for (int j = 0; j < cols; j++)
+		for (int i = 0; i < rows; i++)
 		{
-			//current cell
-			if (board[i][j] == ALIVE)
+			for (int j = 0; j < cols; j++)
 			{
-				aliveCells++;
-			}
-			//left neightbor
-			if (j > 0 && board[i][j - 1] == ALIVE)
-			{
-				aliveCells++;
-			}
-			//right neighbor
-			if (j < cols - 1 && board[i][j + 1] == ALIVE)
-			{
-				aliveCells++;
-			}
-			//top neighbor
-			if (i > 1 && board[i - 1][j] == ALIVE)
-			{
-				aliveCells++;
-			}
-			//bottom neighbor
-			if (i < rows - 1 && board[i + 1][j] == ALIVE)
-			{
-				aliveCells++;
-			}
-			//top left neighbor
-			if (i > 1 && j > 1 && board[i - 1][j - 1] == ALIVE)
-			{
-				aliveCells++;
-			}
-			//top right neighbor
-			if (i > 1 && j < cols - 1 && board[i - 1][j + 1] == ALIVE)
-			{
-				aliveCells++;
-			}
-			//bottom left neighbor
-			if (i < rows - 1 && j > 1 && board[i + 1][j - 1] == ALIVE)
-			{
-				aliveCells++;
-			}
-			//bottom right neighbor
-			if (i < rows - 1 && j < cols - 1 && board[i + 1][j + 1] == ALIVE)
-			{
-				aliveCells++;
-			}
-
-			//set temporary values
-			tempBoard[i][j] = DEAD;
-
-			//there are less than 2 alive neighbors => die due to under-population
-			if (board[i][j] == ALIVE && aliveCells < 2)
-			{
-				tempBoard[i][j] = DEAD;
-			}
-			//there are 2 or 3 alive neighbors => cell lives in the next generation
-			else if (board[i][j] == ALIVE
-					&& (aliveCells == 2 || aliveCells == 3))
-			{
-				tempBoard[i][j] = ALIVE;
-			}
-			//there are more than 3 neighbors => cell dies due to overcrowding
-			else if (board[i][j] == ALIVE && aliveCells > 3)
-			{
-				tempBoard[i][j] = DEAD;
-			}
-			//the cell has exactly 3 alive neighbors => it is reproduced
-			else if (board[i][j] == DEAD && aliveCells == 3)
-			{
-				tempBoard[i][j] = ALIVE;
+				tempBoard[i][j] = getCell(board[i][j], i, j, flag);
 			}
 		}
+		flag = !flag;
 	}
-
-	//delete old board
-	for (int i = 0; i < rows; i++)
+	else
 	{
-		delete[] board[i];
-	}
-	delete[] board;
-
-	//create board
-	board = new CELL_STATUS*[rows];
-	for (int i = 0; i < rows; i++)
-	{
-		board[i] = new CELL_STATUS[cols];
-	}
-
-	//copy buffer board
-	for (int i = 0; i < rows; i++)
-	{
-		for (int j = 0; j < cols; j++)
+		for (int i = 0; i < rows; i++)
 		{
-			board[i][j] = tempBoard[i][j];
+			for (int j = 0; j < cols; j++)
+			{
+				board[i][j] = getCell(tempBoard[i][j], i, j, flag);
+			}
 		}
+		flag = !flag;
 	}
-
-	//delete buffer board
-	for (int i = 0; i < rows; i++)
-	{
-		delete[] tempBoard[i];
-	}
-	delete[] tempBoard;
-
-	//draw next state of the board
-	cout << endl;
-	cout << *this;
 }
 
 ostream& operator<<(ostream& out, const GameOfLife& other)
 {
-	for (int i = 0; i < other.rows; i++)
+	if (other.flag)
 	{
-		for (int j = 0; j < other.cols; j++)
+		for (int i = 0; i < other.rows; i++)
 		{
-			if (other.board[i][j] == DEAD)
+			for (int j = 0; j < other.cols; j++)
 			{
-				out << '.';
+				(other.board[i][j] == DEAD) ? out << '.' : out << 'X';
 			}
-			else if (other.board[i][j] == ALIVE)
-			{
-				out << 'X';
-			}
+			out<<endl;
 		}
-		out << endl;
 	}
+	else
+	{
+		for (int i = 0; i < other.rows; i++)
+		{
+			for (int j = 0; j < other.cols; j++)
+			{
+				(other.tempBoard[i][j] == DEAD) ? out << '.' : out << 'X';
+			}
+			out<<endl;
+		}
+	}
+
+	for(int i=0; i<other.cols; i++)
+	{
+		out<<'=';
+	}
+
+	out<<endl;
+
 	return out;
 }
 
-char* GameOfLife::getCell(int x, int y) const
+CELL_STATUS GameOfLife::getCell(CELL_STATUS state, int _x, int _y,
+		bool _flag) const
 {
-	if (board[x][y] == DEAD)
+	int aliveCells = 0;
+
+	if (_flag)
 	{
-		return "DEAD";
+		for (int i = _x - 1; i <= _x + 1; i++)
+		{
+			for (int j = _y - 1; j <= _y + 1; j++)
+			{
+				if (i == _x && j == _y)
+				{
+					continue;
+				}
+				if (i > -1 && i < rows && j > -1 && j < cols)
+				{
+					if (board[i][j] == ALIVE)
+					{
+						aliveCells++;
+					}
+				}
+			}
+		}
 	}
-	return "ALIVE";
+	else
+	{
+		for (int i = _x - 1; i <= _x + 1; i++)
+		{
+			for (int j = _y - 1; j <= _y + 1; j++)
+			{
+				if (i == _x && j == _y)
+				{
+					continue;
+				}
+				if (i > -1 && i < rows && j > -1 && j < cols)
+				{
+					if (tempBoard[i][j] == ALIVE)
+					{
+						aliveCells++;
+					}
+				}
+			}
+		}
+	}
+
+	if (state == ALIVE)
+	{
+		return (aliveCells > 1 && aliveCells < 4) ? ALIVE : DEAD;
+	}
+	else
+	{
+		return (aliveCells == 3) ? ALIVE : DEAD;
+	}
 }

@@ -20,13 +20,15 @@ class GameOfLife
 	int rows;
 	int cols;
 	CELL_STATUS** board;
+	CELL_STATUS** tempBoard;
+	bool flag; //switch between boards without coping
 public:
 	GameOfLife();
 	GameOfLife(int, int, int*);
 	GameOfLife(const GameOfLife&);
 	~GameOfLife();
 	void advance();
-	char* getCell(int, int) const;
+	CELL_STATUS getCell(CELL_STATUS, int, int, bool) const;
 	friend std::ostream& operator<<(std::ostream&, const GameOfLife&);
 };
 
