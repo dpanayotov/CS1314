@@ -22,7 +22,7 @@ class GameOfLife
 	CELL_STATUS** board;
 public:
 	GameOfLife();
-	GameOfLife(int, int, CELL_STATUS*);
+	GameOfLife(int, int, int*);
 	GameOfLife(const GameOfLife&);
 	~GameOfLife();
 	void advance();

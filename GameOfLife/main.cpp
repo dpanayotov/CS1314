@@ -12,9 +12,13 @@
 using namespace std;
 int main()
 {
+	int alive[8] = {1,2,3,4,5,6,7,8};
 	GameOfLife gol;
 	cout<<gol;
-	cout<<gol.getCell(1,1);
+	cout<<endl;
+	gol.advance();
+	gol.advance();
+	gol.advance();
 	return 0;
 
 }
