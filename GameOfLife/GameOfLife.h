@@ -1,7 +1,7 @@
 /*
- * GamOfLife.h
+ * GameOfLife.h
  *
- *  Created on: May 18, 2014
+ *  Created on: May 20, 2014
  *      Author: dpanayotov
  */
 
@@ -9,27 +9,24 @@
 #define GAMEOFLIFE_H_
 #include <iostream>
 
-
-enum CELL_STATUS
+enum STATUS
 {
 	DEAD, ALIVE
 };
 
 class GameOfLife
 {
-	int rows;
-	int cols;
-	CELL_STATUS** board;
-	CELL_STATUS** tempBoard;
-	bool flag; //switch between boards without coping
+	STATUS** field;
+	STATUS** tempField;
+	int rows, cols;
 public:
 	GameOfLife();
-	GameOfLife(int, int, int*);
 	GameOfLife(const GameOfLife&);
+	GameOfLife(int, int, int*);
 	~GameOfLife();
 	void advance();
-	CELL_STATUS getCell(CELL_STATUS, int, int, bool) const;
+	STATUS getCell(STATUS, int, int);
 	friend std::ostream& operator<<(std::ostream&, const GameOfLife&);
 };
 
-#endif /* GAMOFLIFE_H_ */
+#endif /* GAMEOFLIFE_H_ */
