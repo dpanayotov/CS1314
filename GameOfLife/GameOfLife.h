@@ -22,11 +22,13 @@ class GameOfLife
 public:
 	GameOfLife();
 	GameOfLife(const GameOfLife&);
-	GameOfLife(int, int, int*);
+	GameOfLife(int, int, int*, int);
 	~GameOfLife();
 	void advance();
 	STATUS getCell(STATUS, int, int);
 	friend std::ostream& operator<<(std::ostream&, const GameOfLife&);
+	void expand();
+	bool onBorder(int, int);
 };
 
 #endif /* GAMEOFLIFE_H_ */
