@@ -102,7 +102,14 @@ void GameOfLife::advance()
 	{
 		for(int j=0; j<cols; j++)
 		{
-			tempField[i][j] = getCell(field[i][j], i, j);
+			if(getCell(field[i][j], i, j)==ALIVE)
+			{
+				tempField[i][j] = ALIVE;
+			}
+			else
+			{
+				tempField[i][j] = DEAD;
+			}
 		}
 	}
 
