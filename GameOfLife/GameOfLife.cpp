@@ -211,11 +211,7 @@ void GameOfLife::expand()
 			{
 				coords[k] = i;
 				coords[k+1] = j;
-				if(k+2 >= liveCnt)
-				{
-					break;
-				}
-				k+=2;
+				(k+2 >= liveCnt) ? break : k+=2;
 			}
 		}
 	}
