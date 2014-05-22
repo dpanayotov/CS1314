@@ -34,7 +34,7 @@ GameOfLife::GameOfLife() :
 	**tempField = **field;
 }
 
-GameOfLife::GameOfLife(int _rows, int _cols, int coords[]) :
+GameOfLife::GameOfLife(int _rows, int _cols, int coords[], int size) :
 		rows(_rows), cols(_cols)
 {
 	field = new STATUS*[rows];
@@ -49,11 +49,9 @@ GameOfLife::GameOfLife(int _rows, int _cols, int coords[]) :
 		tempField[i] = new STATUS[cols];
 	}
 
-	int k = 0;
-	while (coords[k])
+	for(int i=0; i<size; i+=2)
 	{
-		field[coords[k]][coords[k + 1]] = ALIVE;
-		k += 2;
+		field[coords[i]][coords[i+1]] = ALIVE;
 	}
 }
 
@@ -97,12 +95,21 @@ GameOfLife::~GameOfLife()
 
 void GameOfLife::advance()
 {
+	bool toExpand = false;
+
 	//copy next-state-field in the buffer field and then copy it back
 	for(int i=0; i<rows; i++)
 	{
 		for(int j=0; j<cols; j++)
 		{
-			tempField[i][j] = getCell(field[i][j], i, j);
+			if(getCell(field[i][j], i, j)==ALIVE)
+			{
+				tempField[i][j] = ALIVE;
+			}
+			else
+			{
+				tempField[i][j] = DEAD;
+			}
 		}
 	}
 
@@ -123,6 +130,10 @@ void GameOfLife::advance()
 		for(int j=0; j<cols; j++)
 		{
 			field[i][j] = tempField[i][j];
+			if(field[i][j] == ALIVE && onBorder(i,j))
+			{
+				expand();
+			}
 		}
 	}
 }
@@ -181,4 +192,79 @@ ostream& operator<<(ostream& out, const GameOfLife& other)
 	out << endl;
 
 	return out;
+}
+
+void GameOfLife::expand()
+{
+	int liveCnt = 0;;
+	for(int i=0; i<rows; i++)
+	{
+		for(int j=0; j<cols; j++)
+		{
+			if(field[i][j] == ALIVE)
+			{
+				liveCnt++;
+			}
+		}
+	}
+
+	int* coords = new int[liveCnt];
+	int k=0;
+	for(int i=0; i<rows; i++)
+	{
+		for(int j=0; j<cols; j++)
+		{
+			if(field[i][j] == ALIVE)
+			{
+				coords[k] = i;
+				coords[k+1] = j;
+				k+=2;
+			}
+		}
+	}
+
+	STATUS** expanded = new STATUS*[rows*2];
+	for(int i=0; i<rows*2; i++)
+	{
+		expanded[i] = new STATUS[cols*2];
+	}
+
+	for(int i=0; i<liveCnt; i+=2)
+	{
+		expanded[coords[i]][coords[i+1]] = ALIVE;
+	}
+
+	for(int i=0; i<rows; i++)
+	{
+		delete[] field[i];
+	}
+	delete[] field;
+
+	rows*=2;
+	cols*=2;
+	field = new STATUS*[rows];
+	for(int i=0; i<rows; i++)
+	{
+		field[i] = new STATUS[cols];
+	}
+
+	for(int i=0; i<rows; i++)
+	{
+		for(int j=0; j<cols; j++)
+		{
+			field[i][j] = expanded[i][j];
+		}
+	}
+
+	for(int i=0; i<rows; i++)
+	{
+		delete[] expanded[i];
+	}
+	delete[] expanded;
+	delete[] coords;
+}
+
+bool GameOfLife::onBorder(int x, int y)
+{
+	return (x==0 || y == 0 || x==rows-1 || y ==cols-1) ? true : false;
 }
