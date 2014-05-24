@@ -10,33 +10,51 @@ import java.util.List;
 public class Airport {
     private Flight[] flights;
     public Airport(){
-        flights = new Flight[2];
-        for(Flight f : flights){
-            f = new Flight();
-        }
-    }
-
-    public Airport(Flight[] flights){;
-        flights = new Flight[flights.length];
-        for(int i=0; i<flights.length; i++){
+        this.flights = new Flight[2];
+        for(int i=0; i<this.flights.length; i++)
+        {
             this.flights[i] = new Flight();
         }
     }
 
+    public Airport(Flight[] flights){;
+        this.flights = new Flight[flights.length];
+        for(int i=0; i<flights.length; i++){
+            this.flights[i] = new Flight();
+            this.flights[i] = flights[i];
+        }
+    }
+
     public void addFlight(Flight flight){
-        List<Flight> newFlights = new ArrayList<Flight>(Arrays.asList(flights));
-        newFlights.add(flight);
-        flights =  newFlights.toArray(new Flight[newFlights.size()+1]);
+        Flight[] tempFlight = new Flight[flights.length+1];
+        for(int i=0; i<flights.length; i++){
+            tempFlight[i] = flights[i];
+        }
+        tempFlight[flights.length] = flight;
+        flights = null;
+        flights = new Flight[tempFlight.length];
+        for(int i=0; i<flights.length; i++){
+            flights[i] = tempFlight[i];
+        }
+        tempFlight = null;
     }
 
     public void removeFlight(int id){
-        ArrayList<Flight> newFlights = new ArrayList<Flight>(Arrays.asList(flights));
+        Flight[] tempFlight = new Flight[flights.length-1];
+        int k=0;
         for(int i=0; i<flights.length; i++){
-            if(this.flights[i].getId() == id){
-                newFlights.remove(i);
+            if(flights[i].getId() != id){
+                tempFlight[k] = flights[i];
+                k++;
             }
         }
-        flights = newFlights.toArray(new Flight[newFlights.size()-1]);
+        flights = null;
+        flights = new Flight[tempFlight.length];
+        for(int i=0; i<flights.length; i++){
+            flights[i] = tempFlight[i];
+        }
+
+        tempFlight = null;
     }
 
     public final void print(){

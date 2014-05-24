@@ -10,7 +10,11 @@ public class Main {
         Flight[] flights = new Flight[2];
         flights[0] = fl;
         flights[1] = fl1;
+        Flight fl2 = new Flight(dt,dt,"Varna", "Shumen");
         Airport ar = new Airport(flights);
+        ar.addFlight(fl2);
+        ar.print();
+        ar.removeFlight(3);
         ar.print();
     }
 }
