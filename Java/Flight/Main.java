@@ -7,7 +7,10 @@ public class Main {
         DateTime dt= new DateTime(date, time);
         Flight fl = new Flight(dt, dt, "Burgas", "Sofia");
         Flight fl1 = new Flight(dt, dt, "Sofia", "Burgas");
-        fl.print();
-        fl1.print();
+        Flight[] flights = new Flight[2];
+        flights[0] = fl;
+        flights[1] = fl1;
+        Airport ar = new Airport(flights);
+        ar.print();
     }
 }

@@ -26,6 +26,10 @@ public class Flight {
         id = ++flightNumber;
     }
 
+    public final int getId(){
+        return this.id;
+    }
+
     public final void print(){
         System.out.printf("Flight ID: %d \nFrom: %s \nTo: %s \nDeparture: ", this.id, this.from, this.to);
         this.departure.print();

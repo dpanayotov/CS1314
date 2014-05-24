@@ -13,8 +13,8 @@ public class DateTime {
     }
 
     public DateTime(Date d, Time t){
-        this.d = new Date(d.getDay(), d.getMonth(), d.getYear());
-        this.t = new Time(t.getHour(), t.getMinute(), t.getSecond());
+        this.d = d;
+        this.t = t;
     }
 
     public void print()
