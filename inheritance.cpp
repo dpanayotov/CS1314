@@ -3,206 +3,241 @@
 
 using namespace std;
 
-class Film
+class Robot
 {
-    char* title;
-    int year;
-    public:
-    Film();
-    virtual ~Film();
-    virtual void print();
-    void printAll();
-};
-
-
-
-class Animation : virtual public Film
-{
-    char* heroName;
-    public:
-    Animation();
-    ~Animation();
-    void print();
-};
-
-class Comedy: virtual public Film
-{
-    int actorCnt;
-    char** actorNames;
-    public:
-    Comedy();
-    ~Comedy();
-    void print();
-};
-
-class Drama : virtual public Film
-{
-    char* maleLead;
-    char* femaleLead;
-    public:
-    Drama();
-    ~Drama();
-    void print();
-};
-
-class History : public Comedy, public Animation, public Drama
-{
-    int historicPersonCnt;
-    public:
-    History();
-    ~History();
-    void print();
-    void printAll();
-};
-
-void History::printAll()
-{
-	Film::print();
-	Animation::print();
-	Comedy::print();
-	Drama::print();
-	print();
-}
-
-Film::Film()
-{
-	cout<<"Film()"<<endl;
-    title = new char[5];
-    strcpy(title, "asd");
-    year = 1999;
-}
-
-Film::~Film()
-{
-	cout<<"~Film()"<<endl;
-    delete[] title;
-}
-
-void Film::print()
-{
-    cout<<title<<' '<<year<<endl;
-}
-
-Animation::Animation() : Film()
-{
-	cout<<"Animation()"<<endl;
-    heroName = new char[10];
-    strcpy(heroName, "snoopy");
-}
-
-Animation::~Animation()
-{
-	cout<<"~Animation()"<<endl;
-    delete[] heroName;
-}
-
-void Animation::print()
-{
-    cout<<heroName<<endl;
-}
-
-Comedy::Comedy() : Film()
-{
-	cout<<"Comedy()"<<endl;
-    actorCnt = 2;
-    actorNames = new char*[actorCnt];
-    for(int i=0; i<actorCnt; i++)
+    char* program;
+public:
+    Robot()
     {
-        actorNames[i] = new char[10];
+        program = new char[1];
+        program[0] = '\0';
     }
-    strcpy(actorNames[0], "johny");
-    strcpy(actorNames[1], "bravo");
-}
 
-Comedy::~Comedy()
-{
-	cout<<"~Comedy()"<<endl;
-    for(int i=0; i<actorCnt; i++)
+    Robot(char* prog)
     {
-        delete[] actorNames[i];
+        program = new char[strlen(prog)+1];
+        strcpy(program, prog);
     }
-    delete[] actorNames;
-}
 
-void Comedy::print()
-{
-    for(int i=0; i<actorCnt; i++)
+    void changeProgram()
     {
-        cout<<actorNames[i]<<' ';
+        cout<<"Enter program: ";
+        delete[] program;
+        char prog[50];
+        cin.getline(prog, 50);
+        program = new char[strlen(prog)+1];
+        strcpy(program, prog);
     }
-    cout<<endl;
-}
 
-Drama::Drama() : Film()
-{
-	cout<<"Drama()"<<endl;
-    maleLead = new char[10];
-    femaleLead = new char[10];
-    strcpy(maleLead, "ivanka");
-    strcpy(femaleLead, "pencho");
-}
+    ~Robot()
+    {
+        delete[] program;
+    }
 
-Drama::~Drama()
-{
-	cout<<"~Drama()"<<endl;
-    delete[] maleLead;
-    delete[] femaleLead;
-}
+};
 
-void Drama::print()
+class Terminator : public Robot
 {
-    cout<<maleLead<<' '<<femaleLead<<endl;
-}
+    char** peopleKilled;
+    int peopleKilledCnt;
+public:
+    Terminator() : Robot()
+    {
+        peopleKilledCnt = 1;
+        peopleKilled = new char*[peopleKilledCnt];
+        for(int i=0; i<peopleKilledCnt; i++)
+        {
+            peopleKilled[i] = new char[50];
+            strcpy(peopleKilled[i], "misho");
+        }
+    }
 
-History::History() : Comedy(), Animation(), Drama()
-{
-	cout<<"History()"<<endl;
-    historicPersonCnt = 10;
-}
+    void del()
+    {
 
-History::~History()
-{
-	cout<<"~History()"<<endl;
-}
+        for(int i=0; i<peopleKilledCnt; i++)
+        {
+            delete[] peopleKilled[i];
+        }
+        delete[] peopleKilled;
+    }
 
-void History::print()
+    Terminator(int cnt, char** ppl, char* pr) : Robot(pr)
+    {
+        char killed[10][50];
+        for(int i=0; i<strlen(*ppl); i++)
+        {
+            strcpy(killed[i], ppl[i]);
+        }
+        peopleKilledCnt = cnt;
+        peopleKilled = new char*[peopleKilledCnt];
+        for(int i=0; i<peopleKilledCnt; i++)
+        {
+            peopleKilled[i] = new char[strlen(killed[i])+1];
+        }
+    }
+
+    void killPerson()
+    {
+        char buffer[100];
+        cout<<"Who would you like me to kill, master? ";
+        cin.getline(buffer, 100);
+        char* name = new char[strlen(buffer)+1];
+        strcpy(name, buffer);
+
+        int tempCnt = peopleKilledCnt+1;
+        char** killPpl = new char*[tempCnt];
+        for(int i=0; i<tempCnt; i++)
+        {
+            killPpl[i] = new char[strlen(peopleKilled[i])+1];
+            strcpy(killPpl[i], peopleKilled[i]);
+        }
+
+        strcpy(killPpl[tempCnt-1], name);
+
+        del();
+
+        peopleKilledCnt = tempCnt;
+
+        peopleKilled = new char*[peopleKilledCnt];
+        for(int i=0; i<peopleKilledCnt; i++)
+        {
+            peopleKilled[i] = new char[strlen(killPpl[i])+1];
+            strcpy(peopleKilled[i], killPpl[i]);
+        }
+        delete[] name;
+    }
+
+    void print()
+    {
+        for(int i=0; i<peopleKilledCnt; i++)
+        {
+            cout<<peopleKilled[i]<<' ';
+        }
+    }
+
+    ~Terminator()
+    {
+        del();
+    }
+};
+
+class KitchenRobot : public Robot
 {
-    cout<<historicPersonCnt<<endl;
-}
+    char* brand;
+public :
+    KitchenRobot() : Robot()
+    {
+        brand = new char[1];
+        brand[0] = '\0';
+    }
+
+    KitchenRobot(char* br, char* pr) : Robot(pr)
+    {
+        brand = new char[strlen(br)+1];
+        strcpy(brand, br);
+    }
+
+    ~KitchenRobot()
+    {
+        delete[] brand;
+    }
+};
+
+class SmartToster : public KitchenRobot
+{
+    int toastsMade;
+public:
+    SmartToster() : KitchenRobot()
+    {
+        toastsMade = 1;
+    }
+
+    SmartToster(int cnt, char* br, char* pr) : KitchenRobot (br, pr)
+    {
+        toastsMade = cnt;
+    }
+
+    void makeToast()
+    {
+        toastsMade++;
+    }
+};
+
+class SmartOven : public KitchenRobot
+{
+    char** recipes;
+    int recipeCnt;
+public:
+    SmartOven() : KitchenRobot()
+    {
+        recipeCnt = 3;
+        recipes = new char*[recipeCnt];
+        for(int i=0; i<recipeCnt; i++)
+        {
+            recipes[i] = new char[20];
+            strcpy(recipes[i], "aassdqwertyuiopkhgf");
+        }
+    }
+
+    SmartOven(int cnt, char** rec, char* br, char* pr) : KitchenRobot(br, pr)
+    {
+        recipeCnt = cnt;
+        recipes = new char*[recipeCnt];
+        {
+            for(int i=0; i<recipeCnt; i++)
+            {
+                recipes[i] = new char[strlen(*rec) + 1];
+                strcpy(recipes[i], rec[i]);
+            }
+        }
+    }
+
+
+
+    ~SmartOven()
+    {
+        for(int i=0; i<recipeCnt; i++)
+        {
+            delete[] recipes[i];
+        }
+        delete[] recipes;
+    }
+
+    bool cook(char** meal, int cnt)
+    {
+        bool is = false;
+        for(int i=0; i<recipeCnt; i++)
+        {
+           for(int j=0; j<cnt; j++)
+           {
+               if(strcmp(meal[j], recipes[i])!=0)
+               {
+                   return false;
+               }
+           }
+        }
+        return true;
+    }
+};
 
 int main()
 {
+    Robot r;
+    r.changeProgram();
+    Terminator t;
+    t.killPerson();
+    t.print();
+    char** asd = new char*[3];
+    for(int i=0; i<3; i++)
+    {
+        asd[i] = new char[20];
+        strcpy(asd[i], "aassdqwertyuiopkhgf");
+    }
 
-    History e;
-
-/*    cout<<"Film: ";
-    a.print();
-
-    cout<<"Comedy: ";
-    b.print();
-
-    cout<<"Animation: ";
-    c.print();
-
-    cout<<"Drama: ";
-    d.print();
-
-    cout<<"History: ";
-    e.print();
-
-    cout<<endl;
-    Film* ptr = &a;
-    ptr->print();
-    ptr = &b;
-    cout<<endl;
-    ptr->print();
-    ptr=&c;
-    cout<<endl;
-    ptr->print();
-    ptr=&e;
-    cout<<endl;
-    ptr->print();*/
-
-    e.printAll();
+    SmartOven so;
+    cout<<so.cook(asd, 3);
+    delete[] asd;
     return 0;
 }
+
