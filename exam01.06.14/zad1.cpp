@@ -40,8 +40,11 @@ void CyclicList<T>::copy(const CyclicList& other)
 template <typename T>
 CyclicList<T>& CyclicList<T>::operator=(const CyclicList& other)
 {
-    del();
-    copy(other);
+    if(this != &other)
+    {
+        del();
+        copy(other);
+    }
     return *this;
 }
 
@@ -73,7 +76,7 @@ void CyclicList<T>::addElement(const T& _data)
 {
     if(end == NULL)
     {
-		end = new Node<T>;
+        end = new Node<T>;
         end->data = _data;
         end->next = end;
     }
@@ -135,13 +138,14 @@ int main()
     int asd = 1;
     a.removeElement(asd);
     cout<<asd<<endl;
-	a.print();
+    a.print();
     CyclicList<int> b(a);
     cout<<endl<<"CyclicList(&): ";
     b.print();
     CyclicList<int> c;
     cout<<endl<<"operator=(a): ";
     c = a;
+    b = a;
     b.print();
     cout<<endl;
 }
