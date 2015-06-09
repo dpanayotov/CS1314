@@ -1,1 +1,1 @@
-CS I, OOP 13/14
+Exercises and homework from the first two semesters (Computer Science '13/'14)
